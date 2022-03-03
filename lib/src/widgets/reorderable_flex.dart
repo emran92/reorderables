@@ -57,6 +57,7 @@ class ReorderableFlex extends StatefulWidget {
     this.reorderAnimationDuration,
     this.scrollAnimationDuration,
     this.ignorePrimaryScrollController = false,
+    this.isReorderable = true,
   })  : assert(
           children.every((Widget w) => w.key != null),
           'All children of this widget must have a key.',
@@ -105,6 +106,7 @@ class ReorderableFlex extends StatefulWidget {
   final Duration? reorderAnimationDuration;
   final Duration? scrollAnimationDuration;
   final bool ignorePrimaryScrollController;
+  final bool isReorderable;
 
   @override
   _ReorderableFlexState createState() => _ReorderableFlexState();
@@ -149,6 +151,7 @@ class _ReorderableFlexState extends State<ReorderableFlex> {
           scrollController: widget.scrollController,
           needsLongPressDraggable: widget.needsLongPressDraggable,
           draggingWidgetOpacity: widget.draggingWidgetOpacity,
+          isReorderable : widget.isReorderable,
           reorderAnimationDuration: widget.reorderAnimationDuration ??
               const Duration(milliseconds: 200),
           scrollAnimationDuration: widget.scrollAnimationDuration ??
@@ -190,6 +193,7 @@ class _ReorderableFlexContent extends StatefulWidget {
     required this.buildItemsContainer,
     required this.buildDraggableFeedback,
     required this.padding,
+    required this.isReorderable,
     this.reorderAnimationDuration = const Duration(milliseconds: 200),
     this.scrollAnimationDuration = const Duration(milliseconds: 200),
   });
@@ -212,6 +216,7 @@ class _ReorderableFlexContent extends StatefulWidget {
   final double draggingWidgetOpacity;
   final Duration reorderAnimationDuration;
   final Duration scrollAnimationDuration;
+  final bool isReorderable;
 
   @override
   _ReorderableFlexContentState createState() => _ReorderableFlexContentState();
@@ -589,7 +594,7 @@ class _ReorderableFlexContentState extends State<_ReorderableFlexContent>
       }
 
       Widget child;
-      if (!isReorderable) {
+      if (!widget.isReorderable) {
         child = toWrap;
       } else {
         child = widget.needsLongPressDraggable
