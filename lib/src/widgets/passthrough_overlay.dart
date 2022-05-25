@@ -126,13 +126,16 @@ class PassthroughOverlayEntry {
   /// done synchronously. This means that it is safe to call during builds, but
   /// also that if you do call this during a build, the UI will not update until
   /// the next frame (i.e. many milliseconds later).
+  T? _ambiguate<T>(T? value) => value;
+
   void remove() {
     assert(_overlay != null);
     final PassthroughOverlayState overlay = _overlay!;
     _overlay = null;
-    if (SchedulerBinding.instance.schedulerPhase ==
+    if (_ambiguate(SchedulerBinding.instance)!.schedulerPhase ==
         SchedulerPhase.persistentCallbacks) {
-      SchedulerBinding.instance.addPostFrameCallback((Duration duration) {
+      _ambiguate(SchedulerBinding.instance)!
+          .addPostFrameCallback((Duration duration) {
         overlay._remove(this);
       });
     } else {
